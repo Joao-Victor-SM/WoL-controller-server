@@ -6,6 +6,7 @@ import { fileURLToPath } from "url";
 import { WebSocketServer } from "ws";
 
 import isJSONValid from "./utils/isJSONValid";
+import logger from "./middleware/logger";
 
 dotenv.config();
 
@@ -14,6 +15,8 @@ const __dirname = path.dirname(__filename);
 
 export function createServer() {
     const app = express();
+    app.use(logger)
+
     app.use(cors());
     app.use(express.static(path.join(__dirname, "dist")));
 
@@ -24,7 +27,7 @@ export function createServer() {
         res.sendFile(path.join(__dirname, "dist", "index.html"));
     });
 
-    const server = app.listen(port, () => {
+    const server = app.listen(port, "127.0.0.1", () => {
         console.log(`Started on port: ${port}`);
     });
 
