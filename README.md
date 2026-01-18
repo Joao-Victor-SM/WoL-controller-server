@@ -1,0 +1,1 @@
+Simple REST api with nextjs to receive info about powering a pc on or off with expressjs.
