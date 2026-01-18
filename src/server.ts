@@ -7,6 +7,7 @@ import { WebSocketServer } from "ws";
 
 import isJSONValid from "./utils/isJSONValid";
 import logger from "./middleware/logger";
+import { registeredClients } from "./states/clients";
 
 dotenv.config();
 
@@ -27,13 +28,12 @@ export function createServer() {
         res.sendFile(path.join(__dirname, "dist", "index.html"));
     });
 
-    const server = app.listen(port, "127.0.0.1", () => {
+    const server = app.listen(port, () => {
         console.log(`Started on port: ${port}`);
     });
 
     const wss = new WebSocketServer({ server });
 
-    const registeredClients = new Set<any>();
 
     wss.on("connection", (ws) => {
         ws.on("message", (data) => {
