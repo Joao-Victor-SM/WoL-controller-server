@@ -1,7 +1,7 @@
 import { WebSocketServer, WebSocket } from "ws";
 import { Server } from "http";
-import { registeredClients } from "./states/clients";
-import isJSONValid from "./utils/isJSONValid";
+import { registeredClients } from "../states/clients";
+import isJSONValid from "../utils/isJSONValid";
 
 export function initWebSocket(server: Server) {
     const wss = new WebSocketServer({ server });
@@ -19,6 +19,7 @@ export function initWebSocket(server: Server) {
 
             if (msg.op === "register") {
                 registeredClients.add(ws);
+                console.log("Added Client")
                 ws.send(JSON.stringify({ message: "Registered" }));
             }
         });

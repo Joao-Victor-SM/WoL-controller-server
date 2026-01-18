@@ -6,7 +6,8 @@ import { fileURLToPath } from "url";
 
 import logger from "./middleware/logger";
 import { onPowerOff, onPowerOn } from "./controllers/powerController";
-import { initWebSocket } from "./websocket.index";
+import { initWebSocket } from "./websocket";
+import { requireApiKey } from "./middleware/auth";
 
 dotenv.config();
 
@@ -26,6 +27,6 @@ export function createServer() {
 
     initWebSocket(server)
 
-    app.get("/power/on", onPowerOn)
-    app.get("/power/off", onPowerOff)
+    app.get("/power/on", requireApiKey, onPowerOn)
+    app.get("/power/off", requireApiKey, onPowerOff)
 }
