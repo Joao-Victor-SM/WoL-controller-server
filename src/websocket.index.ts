@@ -23,9 +23,7 @@ export function initWebSocket(server: Server) {
             }
         });
 
-        ws.on("close", () => {
-            registeredClients.delete(ws);
-        });
+        ws.on("close", () => registeredClients.delete(ws));
     });
 
     return wss;
