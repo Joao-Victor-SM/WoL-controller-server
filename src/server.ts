@@ -8,6 +8,7 @@ import { WebSocketServer } from "ws";
 import isJSONValid from "./utils/isJSONValid";
 import logger from "./middleware/logger";
 import { registeredClients } from "./states/clients";
+import { onPowerOff, onPowerOn } from "./controllers/powerController";
 
 dotenv.config();
 
@@ -23,10 +24,6 @@ export function createServer() {
 
     const port = Number(process.env.APP_PORT);
     if (!port) throw new Error("APP_PORT missing");
-
-    app.get("/", (req, res) => {
-        res.sendFile(path.join(__dirname, "dist", "index.html"));
-    });
 
     const server = app.listen(port, () => {
         console.log(`Started on port: ${port}`);
@@ -53,21 +50,6 @@ export function createServer() {
         ws.on("close", () => registeredClients.delete(ws));
     });
 
-    app.get("/power/on", (req, res) => {
-        registeredClients.forEach((c) => {
-            if (c.readyState === c.OPEN) {
-                c.send(JSON.stringify({ op: "powerStateChange", state: true }));
-            }
-        });
-        res.json({ ok: true });
-    });
-
-    app.get("/power/off", (req, res) => {
-        registeredClients.forEach((c) => {
-            if (c.readyState === c.OPEN) {
-                c.send(JSON.stringify({ op: "powerStateChange", state: false }));
-            }
-        });
-        res.json({ ok: true });
-    });
+    app.get("/power/on", onPowerOn)
+    app.get("/power/off", onPowerOff)
 }
