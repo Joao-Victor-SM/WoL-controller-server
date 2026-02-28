@@ -5,7 +5,7 @@ import cors from "cors";
 import { fileURLToPath } from "url";
 
 import logger from "./middleware/logger";
-import { onPowerOff, onPowerOn } from "./controllers/powerController";
+import { onPowerOff, onPowerOn, getRegisteredClients } from "./controllers/powerController";
 import { initWebSocket } from "./websocket";
 import { requireApiKey } from "./middleware/auth";
 
@@ -29,4 +29,5 @@ export function createServer() {
 
     app.get("/power/on", requireApiKey, onPowerOn)
     app.get("/power/off", requireApiKey, onPowerOff)
+    app.get("/registered", getRegisteredClients)
 }
