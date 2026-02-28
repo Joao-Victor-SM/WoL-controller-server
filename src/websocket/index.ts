@@ -19,8 +19,10 @@ export function initWebSocket(server: Server) {
 
             if (msg.op === "register") {
                 registeredClients.add(ws);
-                console.log("Added Client")
+                console.log("Added Client");
                 ws.send(JSON.stringify({ message: "Registered" }));
+            } else if (msg.op === "ping") {
+                ws.send(JSON.stringify({ op: "pong" }));
             }
         });
 
