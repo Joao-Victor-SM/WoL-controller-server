@@ -22,6 +22,15 @@ export function initWebSocket(server: Server) {
 
         resetPingTimer();
 
+        const formatTimestamp = (date: Date): string => {
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${day}/${month}/${year} - ${hours}:${minutes}`;
+        };
+
         ws.on("message", (data) => {
             const dataString = data.toString();
 
@@ -40,7 +49,7 @@ export function initWebSocket(server: Server) {
                 ws.send(JSON.stringify({ message: "Registered" }));
             } else if (msg.op === "ping") {
                 const date = new Date();
-                console.log(`${date.toString()} - Ping received from client`);
+                console.log(`${formatTimestamp(date)} - Ping received from client`);
                 ws.send(JSON.stringify({ op: "pong" }));
             }
         });
@@ -48,7 +57,7 @@ export function initWebSocket(server: Server) {
         ws.on("close", () => {
             if (pingTimeoutId) clearTimeout(pingTimeoutId);
             registeredClients.delete(ws);
-            console.log(`Client disconnected at ${new Date().toString()}`);
+            console.log(`Client disconnected at ${formatTimestamp(new Date())}`);
         });
 
         ws.on("error", (error) => {
