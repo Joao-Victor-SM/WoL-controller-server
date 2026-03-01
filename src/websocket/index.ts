@@ -22,7 +22,8 @@ export function initWebSocket(server: Server) {
                 console.log("Added Client");
                 ws.send(JSON.stringify({ message: "Registered" }));
             } else if (msg.op === "ping") {
-                console.log("Ping received");
+                const date = new Date()
+                console.log(`${date.toString()} - Ping received`);
                 ws.send(JSON.stringify({ op: "pong" }));
             }
         });
