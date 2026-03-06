@@ -47,17 +47,15 @@ export function initWebSocket(server: Server) {
                 registeredClients.add(ws);
                 console.log("Added Client");
                 ws.send(JSON.stringify({ message: "Registered" }));
-            } else if (msg.op === "ping") {
-                const date = new Date();
-                console.log(`${formatTimestamp(date)} - Ping received from client`);
-                ws.send(JSON.stringify({ op: "pong" }));
-            }
+            } else if (msg.op === "ping") 
+                ws.send(JSON.stringify({ op: "pong" }))
+            
         });
 
         ws.on("close", () => {
             if (pingTimeoutId) clearTimeout(pingTimeoutId);
             registeredClients.delete(ws);
-            console.log(`Client disconnected at ${formatTimestamp(new Date())}`);
+            console.log(`Client timed out at ${formatTimestamp(new Date())}`);
         });
 
         ws.on("error", (error) => {
